@@ -1,11 +1,13 @@
 # opencode-workspace-scope
 
-全局安装、**sidecar 自激活**的 [opencode](https://opencode.ai) 插件，为多 git worktree 并行开发提供工作区作用域隔离。
+全局安装、**sidecar 自激活**的 [opencode](https://opencode.ai) 插件，为"一个项目涉及多个代码仓库"的并行开发场景提供工作区作用域隔离。
 
-每个并行工作区在 `.opencode/workspace-scope.jsonc` 里声明本工作区涉及的 worktree 路径与职责，插件据此：
+在 `.opencode/workspace-scope.jsonc` 里声明本项目涉及的各个仓库路径与职责（如前端仓库、后端仓库、编排根），插件据此：
 
-- 自动注入 `permission.external_directory` 白名单，**只放开本工作区的 worktree**，其余外部路径保持默认 ask；
-- 把"工作区根 + 各 worktree 路径及职责"注入 system prompt，让 AI 每轮都知道改哪里、哪些路径不能碰。
+- 自动注入 `permission.external_directory` 白名单，**只放开配置中声明的仓库**，其余外部路径保持默认 ask；
+- 把"工作区根 + 各仓库路径及职责"注入 system prompt，让 AI 每轮都知道改哪里、哪些路径不能碰。
+
+sidecar 只需在编排根（或任一仓库）放一份，其他并行会话通过向上查找自动继承作用域，配合 init 工具自动探测兄弟仓库，开箱即用、零重复配置。
 
 无 sidecar 的项目中插件完全 no-op，不影响任何正常使用。
 
@@ -28,7 +30,7 @@ ln -s /path/to/opencode-workspace-scope/src/index.ts ~/.config/opencode/plugins/
 
    > 初始化这个工作区的 scope 配置
 
-   插件会调用 `workspace_scope_init` 工具：自动探测父目录下的兄弟 git 仓库作为候选 worktree，生成 `.opencode/workspace-scope.jsonc`（并自动写入 `.opencode/.gitignore`，不纳入版本管理），同时生成配套 JSON Schema。
+   插件会调用 `workspace_scope_init` 工具：自动探测父目录下的兄弟 git 仓库作为候选 worktree，生成 `.opencode/workspace-scope.jsonc`（并自动写入 `.opencode/.gitignore`，不纳入版本管理），同时生成配套 JSON Schema。也可让 AI 传入显式 worktrees 列表，覆盖任意仓库/目录。
 
 2. 编辑该文件，为每个 worktree 补充 `description`（职责说明，会注入 AI 上下文）：
 
@@ -48,6 +50,8 @@ ln -s /path/to/opencode-workspace-scope/src/index.ts ~/.config/opencode/plugins/
    ```
 
    `path` 支持绝对路径，也支持相对**工作区根目录**的相对路径（如 `../backend`）。
+
+   > `worktrees` 泛指本工作区涉及的各代码仓库/目录，不要求是 git worktree；可以是兄弟仓库、monorepo 子目录，或任意绝对/相对路径。
 
 3. **重启 opencode**，使 external_directory 权限生效（上下文注入无需重启）。
 
