@@ -32,8 +32,12 @@ function ensureGitignore(sidecarDir: string, lines: string[]): void {
   const gi = join(sidecarDir, ".gitignore")
   try {
     const cur = existsSync(gi) ? readFileSync(gi, "utf8") : ""
-    const missing = lines.filter((l) => !cur.split("\n").includes(l))
-    if (missing.length > 0) appendFileSync(gi, `${missing.join("\n")}\n`)
+    const existing = cur.split(/\r?\n/)
+    const missing = lines.filter((l) => !existing.includes(l))
+    if (missing.length > 0) {
+      const sep = cur !== "" && !cur.endsWith("\n") ? "\n" : ""
+      appendFileSync(gi, `${sep}${missing.join("\n")}\n`)
+    }
   } catch {
     // ignore
   }

@@ -9,13 +9,18 @@ export const WorkspaceScopePlugin: Plugin = async ({ directory, worktree, client
 
   const logApplied = (sidecarPath: string): void => {
     try {
-      ;(client as { app?: { log?: (input: unknown) => unknown } }).app?.log?.({
+      const result = (
+        client as { app?: { log?: (input: unknown) => Promise<unknown> } }
+      ).app?.log?.({
         body: {
           service: "workspace-scope",
           level: "info",
           message: `已应用工作区作用域 ${sidecarPath}`,
         },
       })
+      if (result && typeof result.catch === "function") {
+        result.catch(() => {})
+      }
     } catch {
       // ignore
     }
