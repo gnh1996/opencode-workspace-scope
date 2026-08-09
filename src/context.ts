@@ -2,9 +2,10 @@ import type { ScopeResult } from "./scope.js"
 
 export function buildScopeBlock(scope: ScopeResult): string {
   const { config } = scope
+  const wsDesc = config.workspace.description ? ` — ${config.workspace.description}` : ""
   const lines = [
     "## Workspace Scope（由 workspace-scope 插件自动注入）",
-    `当前工作区：${config.name}（工作区根：${config.workspace.path}）`,
+    `当前工作区：${config.name}（工作区根：${config.workspace.path}）${wsDesc}`,
     "本次会话的修改范围仅限以下目录，其他路径一律视为外部目录、需用户确认后才可修改：",
     ...config.worktrees.map((w) => {
       const desc = w.description ? ` — ${w.description}` : ""

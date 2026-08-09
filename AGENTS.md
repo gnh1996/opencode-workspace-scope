@@ -24,7 +24,7 @@
 
 - TypeScript，ESM（`"type": "module"`），NodeNext 解析；源码内相对导入必须带 `.js` 后缀；
 - `npm install` 安装依赖；`npm run typecheck`（`tsc --noEmit`）；`npm run build`（`tsc` 输出到 `dist/`）；
-- 发布：`npm version patch && npm publish`（发布前自动 typecheck+build，见 `prepublishOnly`）。
+- 安装：已发布为 npm 包，`opencode plugin opencode-workspace-scope -g` 写入全局 `plugin` 数组，启动时 bun 安装到 `~/.cache/opencode/packages/`。
 
 ## 开发与调试
 
