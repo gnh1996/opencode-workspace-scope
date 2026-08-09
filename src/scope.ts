@@ -6,6 +6,7 @@ import { parseJsonc } from "./jsonc.js"
 export interface WorktreeDef {
   name: string
   path: string
+  realpath: string
   description?: string
 }
 
@@ -93,11 +94,15 @@ export function loadScope(anchor: string): ScopeResult | null {
       (w): w is Record<string, unknown> =>
         !!w && typeof w === "object" && typeof w.name === "string" && typeof w.path === "string",
     )
-    .map((w) => ({
-      name: w.name as string,
-      path: normalizePath(toAbsolutePath(w.path as string, workspacePath)),
-      description: typeof w.description === "string" ? w.description : undefined,
-    }))
+    .map((w) => {
+      const path = toAbsolutePath(w.path as string, workspacePath)
+      return {
+        name: w.name as string,
+        path,
+        realpath: normalizePath(path),
+        description: typeof w.description === "string" ? w.description : undefined,
+      }
+    })
   if (worktrees.length === 0) return null
 
   const name = typeof raw.name === "string" && raw.name ? raw.name : basename(anchor)

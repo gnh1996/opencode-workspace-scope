@@ -1,6 +1,6 @@
 import { tool } from "@opencode-ai/plugin"
 import { basename, dirname, join } from "node:path"
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, appendFileSync } from "node:fs"
 import { invalidateScope } from "./scope.js"
 import { WORKSPACE_SCOPE_SCHEMA } from "./schema.js"
 
@@ -28,14 +28,12 @@ function detectSiblingRepos(anchor: string): Array<{ name: string; path: string 
   return out
 }
 
-function ensureGitignore(sidecarDir: string): void {
+function ensureGitignore(sidecarDir: string, lines: string[]): void {
   const gi = join(sidecarDir, ".gitignore")
   try {
     const cur = existsSync(gi) ? readFileSync(gi, "utf8") : ""
-    if (!cur.split("\n").includes("workspace-scope.jsonc")) {
-      const line = "workspace-scope.jsonc"
-      writeFileSync(gi, cur.trim() ? `${cur.trim()}\n${line}\n` : `${line}\n`)
-    }
+    const missing = lines.filter((l) => !cur.split("\n").includes(l))
+    if (missing.length > 0) appendFileSync(gi, `${missing.join("\n")}\n`)
   } catch {
     // ignore
   }
@@ -100,7 +98,7 @@ export const initTool = tool({
     }
     writeFileSync(filePath, JSON.stringify(content, null, 2))
     writeSchema(sidecarDir)
-    ensureGitignore(sidecarDir)
+    ensureGitignore(sidecarDir, ["workspace-scope.jsonc", "workspace-scope.schema.json"])
     invalidateScope()
 
     return [

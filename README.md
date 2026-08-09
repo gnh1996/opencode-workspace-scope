@@ -53,9 +53,10 @@ ln -s /path/to/opencode-workspace-scope/src/index.ts ~/.config/opencode/plugins/
 
 ## 权限行为
 
-- 注入到 `permission.external_directory`：`"<worktree>/**: allow"`，采用"末尾追加、last-match-wins"合并，不覆盖你已有的其他规则；
+- 注入到 `permission.external_directory`：`"<worktree>/**: allow"`，采用"末尾追加、last-match-wins"合并，不覆盖你已有的其他规则；对每个 worktree 同时写入**词法路径与 realpath 两种 pattern**，避免符号链接祖先导致白名单失效；
 - 工作区根目录之外、且不在白名单内的路径：维持 opencode 默认 `ask`；
 - sidecar 中不存在的路径会被跳过，不会崩溃；
+- **sidecar 向上查找**：从启动目录逐级向上找 `.opencode/workspace-scope.jsonc`（最多 10 层），嵌套子项目会继承父工作区的作用域（对齐 opencode 自身配置发现行为）；
 - 注意：`opencode --auto` 会把 `ask` 自动放行。若并行会话需要硬隔离，请在配置里为 `external_directory` 追加 `"*": "deny"` 兜底。
 
 ## 注入的上下文

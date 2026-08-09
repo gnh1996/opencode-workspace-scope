@@ -4,13 +4,28 @@ import { buildExternalDirectory, mergePermission } from "./permissions.js"
 import { buildScopeBlock } from "./context.js"
 import { initTool } from "./init.js"
 
-export const WorkspaceScopePlugin: Plugin = async ({ directory, worktree }) => {
+export const WorkspaceScopePlugin: Plugin = async ({ directory, worktree, client }) => {
   const anchor = worktree || directory
+
+  const logApplied = (sidecarPath: string): void => {
+    try {
+      ;(client as { app?: { log?: (input: unknown) => unknown } }).app?.log?.({
+        body: {
+          service: "workspace-scope",
+          level: "info",
+          message: `已应用工作区作用域 ${sidecarPath}`,
+        },
+      })
+    } catch {
+      // ignore
+    }
+  }
 
   return {
     config: async (cfg) => {
       const scope = loadScope(anchor)
       if (!scope) return
+      logApplied(scope.sidecarPath)
       const external = buildExternalDirectory(scope)
       if (Object.keys(external).length === 0) return
       const anyCfg = cfg as { permission?: unknown }

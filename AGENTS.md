@@ -16,6 +16,8 @@
 - **外部路径不改默认语义**：用户 `permission` 为字符串缩写（如 `"allow"`）时不改写；对象形式的 `external_directory` 按"末尾追加 allow、last-match-wins"合并；
 - **system.transform 必须原地变更**：拼进 `output.system[0]`，禁止整体赋值 `output.system = [...]`（静默 no-op，issue #25754）；无 `sessionID` 时不注入；
 - **相对路径以工作区根为基准**：sidecar 位于 `<工作区根>/.opencode/`，worktree 相对路径（如 `../frontend`）以工作区根解析；sidecar 缺失/解析失败/路径不存在均不崩溃，仅记日志；
+- **sidecar 向上查找（最多 10 层）**：嵌套子项目继承父工作区作用域，与 opencode 自身配置发现行为一致；作用域生效时打 info 日志记录 sidecar 路径；
+- **external_directory 双 pattern**：对每个 worktree 同时注入词法路径与 realpath（`realpath !== path` 时），规避符号链接祖先导致白名单失效；
 - **零新增依赖**：运行时只依赖 `@opencode-ai/plugin`（用于 `tool` 助手与类型），jsonc 解析用自带轻量实现。
 
 ## 技术栈与命令

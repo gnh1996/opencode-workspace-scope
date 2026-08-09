@@ -10,6 +10,7 @@ export function buildExternalDirectory(scope: ScopeResult): Record<string, strin
   for (const wt of scope.config.worktrees) {
     if (!existsSync(wt.path)) continue
     rules[patternPath(wt.path)] = "allow"
+    if (wt.realpath !== wt.path) rules[patternPath(wt.realpath)] = "allow"
   }
   return rules
 }
