@@ -1,6 +1,6 @@
 {
   "name": "opencode-workspace-scope",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "全局安装、sidecar 自激活的 opencode 插件：按工作区配置自动生成 external_directory 权限，并把工作区 worktree 路径与职责注入 AI 上下文，支撑多 worktree 并行开发互不干扰。",
   "type": "module",
   "main": "./dist/index.js",
