@@ -1,5 +1,7 @@
 # opencode-workspace-scope
 
+> **opencode2（V2）用户请看这里**：本分支为 V1（opencode 1.x）适配。opencode2 的插件适配在 [`v2` 分支](https://github.com/gnh1996/opencode-workspace-scope/tree/v2)，npm 包以 `beta` dist-tag 发布：`opencode2 plugin add opencode-workspace-scope@beta`。两版插件 API 与依赖不兼容，不可混装。
+
 全局安装、**sidecar 自激活**的 [opencode](https://opencode.ai) 插件，为"一个项目涉及多个代码仓库"的并行开发场景提供工作区作用域隔离。
 
 在 `.opencode/workspace-scope.jsonc` 里声明本项目涉及的各个仓库路径与职责（如前端仓库、后端仓库、编排根），插件据此：
