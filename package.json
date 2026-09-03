@@ -1,7 +1,7 @@
 {
   "name": "opencode-workspace-scope",
-  "version": "0.1.1",
-  "description": "全局安装、sidecar 自激活的 opencode 插件：按工作区配置自动生成 external_directory 权限，并把工作区 worktree 路径与职责注入 AI 上下文，支撑多 worktree 并行开发互不干扰。",
+  "version": "0.2.0-beta.1",
+  "description": "全局安装、sidecar 自激活的 opencode2 插件：在工作区权限评估时动态放行已声明 worktree 的 external_directory，并把工作区路径与职责注入 AI 上下文，支撑多 worktree 并行开发互不干扰。",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,6 +21,7 @@
   },
   "keywords": [
     "opencode",
+    "opencode2",
     "plugin",
     "worktree",
     "workspace",
@@ -28,7 +29,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@opencode-ai/plugin": "^1.18.3"
+    "@opencode-ai/plugin": "0.0.0-beta-18955"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
