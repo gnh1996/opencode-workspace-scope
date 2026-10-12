@@ -90,7 +90,7 @@ opencode2 plugin add opencode-workspace-scope@beta
 - **自激活**：无 sidecar 时 setup 不注册任何 hook，完全 no-op；
 - **权限只押 `external_directory`**：不依赖 read/edit 的路径 pattern；
 - **不改默认语义**：只升级 `ask → allow`，deny/allow 原样保留，多资源部分命中不放行；
-- **零新增运行时依赖**：仅依赖 `@opencode-ai/plugin`（beta）。
+- **零新增运行时依赖**：仅依赖 `@opencode/plugin`（V2 稳定插件 API，版本号与目标 opencode2 对齐，如 `2.0.27`）。
 
 ## 开发
 
@@ -107,9 +107,11 @@ npm run build       # 输出到 dist/
 export { default } from "/absolute/path/to/opencode-workspace-scope/dist/index.js"
 ```
 
-注意本地包目录形式的插件需要依赖可解析（`@opencode-ai/plugin`），建议用上面的转发文件 + 仓库内 `node_modules`。
+注意本地包目录形式的插件需要依赖可解析（`@opencode/plugin`），建议用上面的转发文件 + 仓库内 `node_modules`。
 
-发布：`npm version prerelease && npm publish --tag beta`（`prepublishOnly` 自动 typecheck + build）；V2 插件 API 仍在 beta，随 opencode2 版本升级需回归验证。
+> **版本对齐**：`@opencode/plugin` 大版本与 opencode2 版本一一对应（如 `2.0.27`）。opencode2 会拦截插件对 `effect`/`@opencode/*` 的导入并注入宿主自带副本，依赖版本不匹配时会在加载期直接报错（典型如旧 beta 包与新版 effect 的 `Schema.isStartsWith`/`isStartingWith` 改名），升级 opencode2 后须同步升级该依赖并回归验证。
+
+发布：`npm version prerelease && npm publish --tag beta`（`prepublishOnly` 自动 typecheck + build），或推送 `v*` tag 由 CI 发布；插件 API 版本需与目标 opencode2 版本对齐（见上文“版本对齐”），升级 opencode2 后须回归验证。
 
 ## License
 

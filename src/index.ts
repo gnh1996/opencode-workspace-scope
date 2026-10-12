@@ -1,4 +1,4 @@
-import { Plugin } from "@opencode-ai/plugin"
+import { Plugin } from "@opencode/plugin"
 import { loadScope } from "./scope.js"
 import { coveredByScope } from "./permissions.js"
 import { buildScopeBlock } from "./context.js"

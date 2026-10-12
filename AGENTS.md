@@ -21,7 +21,7 @@
 - **相对路径以工作区根为基准**：sidecar 位于 `<工作区根>/.opencode/`，worktree 相对路径（如 `../frontend`）以工作区根解析；sidecar 缺失/解析失败/路径不存在均不崩溃，仅记日志；
 - **sidecar 向上查找（最多 10 层）**：嵌套子项目继承父工作区作用域，与 opencode 自身配置发现行为一致；作用域生效时打日志记录 sidecar 路径；
 - **anchor 取 `ctx.location.project.canonical`（回退 `ctx.location.directory`）**：对齐 V1 的 `worktree || directory` 语义；
-- **零新增依赖**：运行时只依赖 `@opencode-ai/plugin`（beta，与目标 opencode2 版本一致），jsonc 解析用自带轻量实现。
+- **零新增依赖**：运行时只依赖 `@opencode/plugin`（与目标 opencode2 版本号对齐，如 `2.0.27`），jsonc 解析用自带轻量实现。
 
 ## 技术栈与命令
 
